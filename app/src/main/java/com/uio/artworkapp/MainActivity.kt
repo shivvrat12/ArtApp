@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,20 +52,30 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@Composable
-fun ArtWork(){
-    var currentState: Int = 1
-    val currentSt = currentState
-
-    var image :Int= when(currentSt){
+fun getImage(myInt:Int):Int{
+    var image = when(myInt){
         1 -> R.drawable.birmingham_museums_trust_sjr8ldyef7k_unsplash
-        2 -> R.drawable.europeana_8e31onocvxg_unsplash
-        3 -> R.drawable.tamara_menzi_n_vnwqmmvoy_unsplash
+        2 -> R.drawable.tamara_menzi_n_vnwqmmvoy_unsplash
+        3 -> R.drawable.europeana_8e31onocvxg_unsplash
         else -> {
             R.drawable.ic_launcher_background
         }
     }
+    return image;
+}
+@Composable
+fun ArtWork(){
+    var myInt by rememberSaveable { mutableStateOf(0) }
+
+
+//    var image :Int= when(myInt){
+//        1 -> R.drawable.birmingham_museums_trust_sjr8ldyef7k_unsplash
+//        2 -> R.drawable.europeana_8e31onocvxg_unsplash
+//        3 -> R.drawable.tamara_menzi_n_vnwqmmvoy_unsplash
+//        else -> {
+//            R.drawable.ic_launcher_background
+//        }
+//    }
     var text = "hello"
 
 //    if(currentState.value == 1){
@@ -84,18 +95,27 @@ fun ArtWork(){
 //    }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        CardView(image)
+        CardView(getImage(myInt))
         Spacer(modifier = Modifier.padding(10.dp))
         CardText(Text = text)
         Spacer(modifier = Modifier.padding(10.dp))
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center) {
-            Button(onClick = { currentState-- }) {
+            Button(onClick = { if(myInt>0){
+                myInt--
+            }else{
+                myInt=0
+            }
+                Log.d("MainActivity","Value: $myInt")
+            }) {
+
                 Text(text = "Previous")
             }
             Spacer(modifier = Modifier.padding(25.dp))
-            Button(onClick = { currentState++
-            Log.d("Hi","Value ${currentState}")}) {
+            Button(onClick = { myInt++
+                Log.d("MainActivity","Value: $myInt")
+
+            }) {
                 Text(text = "Next")
             }
         }
